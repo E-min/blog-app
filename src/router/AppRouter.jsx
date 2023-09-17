@@ -8,7 +8,7 @@ import About from "../components/pages/About";
 import { useSelector } from "react-redux";
 import EffectField from "../components/animation/EffectField";
 import Blogs from "../components/pages/Blogs/Blogs";
-import Blog from "../components/pages/Blog";
+import Blog from "../components/pages/Blog/Blog";
 
 const AppRouter = () => {
   const { isLoggedIn } = useSelector(({ auth }) => auth);
@@ -22,14 +22,8 @@ const AppRouter = () => {
         }
       />
       <Route element={isLoggedIn ? <Navigate to="/blogs" /> : <EffectField />}>
-        <Route
-          path="/login"
-          element={<Login />}
-        />
-        <Route
-          path="/register"
-          element={<Register />}
-        />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Route>
       <Route path="/blogs" element={<PrivateRouter />}>
         <Route index element={<Blogs />} />

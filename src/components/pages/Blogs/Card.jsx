@@ -3,33 +3,21 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ChatIcon from "@mui/icons-material/Chat";
 import IconButton from "@mui/material/IconButton";
-import { useDispatch, useSelector } from "react-redux";
-import likeUnlike from "../../../services/likeUnlike";
-import getDetailsById from "../../../services/getDetailsById";
-import { useState } from "react";
-import { updateBlogs } from "../../../features/blogSlice";
+import { useSelector } from "react-redux";
+import useLikeUnlike from "../../../hooks/useLikeUnlike";
 
 const Card = ({ data, onClick }) => {
-  const { currentUser, token } = useSelector(({ auth }) => auth);
-  const [blogContent, setBlogContent] = useState(data);
-  const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
+  const { currentUser } = useSelector(({ auth }) => auth);
+  const { blog, loading, likeUnlike } = useLikeUnlike(data);
 
-  const handleLikeClick = async () => {
-    setLoading(true);
-    try {
-      await likeUnlike(data.id, token);
-      const response = await getDetailsById(data.id, token);
-      setBlogContent(response);
-      dispatch(updateBlogs(response));
-    } catch (err) {
-    } finally {
-      setLoading(false);
-    }
+  const handleLikeClick = () => {
+    likeUnlike(data.id);
   };
-  const isUserLiked = blogContent?.likes_n?.some(
+
+  const isUserLiked = blog?.likes_n?.some(
     (like) => like.user_id === currentUser.id
   );
+
   const likeBtnColor = isUserLiked && "primary.main";
 
   return (
@@ -48,11 +36,11 @@ const Card = ({ data, onClick }) => {
             pb: 3,
             pt: 1,
             "&:hover": {
-              backgroundColor: "rgba(255, 255, 255, 0.05)",
+              backgroundColor: "action.hover",
             },
           }}
         >
-          <Typography my={2}>{blogContent.title}</Typography>
+          <Typography my={2}>{blog.title}</Typography>
           <Box
             sx={{
               width: "100%",
@@ -64,7 +52,7 @@ const Card = ({ data, onClick }) => {
             }}
           >
             <img
-              src={blogContent.image}
+              src={blog.image}
               alt=""
               style={{ maxWidth: "100%", maxHeight: "100%" }}
             />
@@ -85,7 +73,7 @@ const Card = ({ data, onClick }) => {
             disabled={loading}
           >
             <ThumbUpIcon />
-            <Typography ml={1}>{blogContent.likes}</Typography>
+            <Typography ml={1}>{blog.likes}</Typography>
           </IconButton>
           <Box
             sx={{
@@ -97,7 +85,7 @@ const Card = ({ data, onClick }) => {
             }}
           >
             <VisibilityIcon />
-            <Typography ml={1}>{blogContent.post_views}</Typography>
+            <Typography ml={1}>{blog.post_views}</Typography>
           </Box>
           <Box
             sx={{
@@ -109,7 +97,7 @@ const Card = ({ data, onClick }) => {
             }}
           >
             <ChatIcon />
-            <Typography ml={1}>{blogContent.comment_count}</Typography>
+            <Typography ml={1}>{blog.comment_count}</Typography>
           </Box>
         </Box>
       </Paper>

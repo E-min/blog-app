@@ -1,18 +1,14 @@
 import { useDispatch, useSelector } from "react-redux";
 import getBlogs from "../../../thunks/getBlogs";
 import { useEffect } from "react";
-import {
-  Box,
-  Grid,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  InputBase,
-  Input,
-  TextField,
-  InputAdornment,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
 import Card from "./Card";
 import { useState } from "react";
 import { useNavigate } from "react-router";
