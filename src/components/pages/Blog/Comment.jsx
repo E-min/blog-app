@@ -19,7 +19,7 @@ const Comment = ({ comment, convertDate }) => {
           <Avatar />
           <Typography>{comment.user}</Typography>
         </Box>
-        <Typography>{convertDate(comment.time_stamp)}</Typography>
+        <Typography textAlign="center">{convertDate(comment.time_stamp)}</Typography>
       </Box>
       <Typography sx={{ mb: 2 }}>{comment.content}</Typography>
     </Box>

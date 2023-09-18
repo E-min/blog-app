@@ -19,7 +19,8 @@ const Blog = () => {
   const { id } = useParams();
   const { blog, loading, getDetailsById } = useGetBlogDetailsById();
   const [inputText, setInputText] = useState({ post: id, content: "" });
-  const { commentLoading, sendComment } = useSendComment();
+  const { error, commentLoading, sendComment } = useSendComment();
+  const maxCommentLength = 200;
 
   useEffect(() => {
     getDetailsById(id);
@@ -29,7 +30,7 @@ const Blog = () => {
     const dateObject = new Date(rawDate);
     const options = {
       year: "numeric",
-      month: "long",
+      month: "short",
       day: "numeric",
     };
 
@@ -37,14 +38,21 @@ const Blog = () => {
   };
 
   const handleInputChange = (e) => {
-    setInputText((prev) => ({ ...prev, content: e.target.value }));
+    const inputValue = e.target.value;
+    if (inputValue.length <= maxCommentLength) {
+      setInputText((prev) => ({ ...prev, content: inputValue }));
+    } else {
+      setInputText((prev) => ({
+        ...prev,
+        content: inputValue.slice(0, maxCommentLength),
+      }));
+    }
   };
   const handleSendComment = (e) => {
     e.preventDefault();
     e.target.reset();
     setInputText({ post: id, content: "" });
-    sendComment(id, inputText);
-    getDetailsById(id);
+    sendComment(id, inputText, getDetailsById);
   };
 
   return (
@@ -63,7 +71,7 @@ const Blog = () => {
         </Typography>
         <Typography sx={{ letterSpacing: 0.5 }}>{blog.content}</Typography>
       </Paper>
-      <Paper sx={{ mt: 4, p: 2, pb: 0 }}>
+      <Paper sx={{ mt: 4, p: 2 }}>
         <FormControl component="form" onSubmit={handleSendComment} fullWidth>
           <TextField
             id="standard-multiline-flexible"
@@ -71,8 +79,26 @@ const Blog = () => {
             multiline
             rows={4}
             sx={{ my: 2 }}
-            value={inputText.comment}
+            value={inputText.content}
             onChange={handleInputChange}
+            error={error}
+            helperText={error && "Comment couldn't sent"}
+            InputProps={{
+              endAdornment: (
+                <Typography
+                  sx={{
+                    position: "absolute",
+                    bottom: 5,
+                    right: 10,
+                    color: "text.secondary",
+                    fontSize: 14,
+                  }}
+                >
+                  {inputText.content.length}/{maxCommentLength}
+                </Typography>
+              ),
+            }}
+            required
           />
           <Button
             type="submit"
@@ -83,7 +109,7 @@ const Blog = () => {
             Send
           </Button>
         </FormControl>
-        <Box sx={{ mt: 3, py: 3, borderTop: 2 }}>
+        <Box sx={{ mt: 3, pb: 2, borderTop: 2 }}>
           {blog.comments ? (
             blog.comments.length ? (
               blog.comments.map((comment) => (
@@ -94,12 +120,12 @@ const Blog = () => {
                 />
               ))
             ) : (
-              <Typography sx={{ textAlign: "center", color: "grey" }}>
+              <Typography sx={{ textAlign: "center", color: "grey", mt: 2 }}>
                 No Comments
               </Typography>
             )
           ) : (
-            <Typography sx={{ textAlign: "center", color: "grey" }}>
+            <Typography sx={{ textAlign: "center", color: "grey", mt: 2 }}>
               No Comments
             </Typography>
           )}
