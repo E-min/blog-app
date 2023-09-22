@@ -82,7 +82,7 @@ const Blog = () => {
   };
 
   return (
-    <Box maxWidth="sm" mx="auto">
+    <Box maxWidth="sm" mx="auto" px={1}>
       <Toolbar />
       <Box sx={{ float: "right", m: 2 }}>
         {authorMode &&

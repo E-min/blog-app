@@ -45,6 +45,8 @@ export default function PostNewBlogsModal({ handleClose, openModal }) {
           border: "2px solid #000",
           boxShadow: 24,
           p: 4,
+          maxHeight: "100vh",
+          overflowY: "auto",
         }}
         maxWidth="sm"
       >
@@ -84,14 +86,16 @@ export default function PostNewBlogsModal({ handleClose, openModal }) {
           value={formInput.content}
           onChange={handleChange}
         />
-        <Button
-          onClick={handleSumbit}
-          sx={{ float: "right", mt: 2 }}
-          variant="contained"
-          disabled={loading}
-        >
-          SEND
-        </Button>
+        <Box sx={{ textAlign: "right", mt: 2 }}>
+          <Button sx={{mr: 1}} onClick={handleClose}>Cancel</Button>
+          <Button
+            onClick={handleSumbit}
+            variant="contained"
+            disabled={loading}
+          >
+            SEND
+          </Button>
+        </Box>
       </Box>
     </Modal>
   );
