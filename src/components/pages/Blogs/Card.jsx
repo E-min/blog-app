@@ -5,21 +5,27 @@ import ChatIcon from "@mui/icons-material/Chat";
 import IconButton from "@mui/material/IconButton";
 import { useSelector } from "react-redux";
 import useLikeUnlike from "../../../hooks/useLikeUnlike";
+import { useNavigate } from "react-router";
 
-const Card = ({ data, onClick }) => {
+const Card = ({ data, children }) => {
   const { currentUser } = useSelector(({ auth }) => auth);
-  const { blog, loading, likeUnlike } = useLikeUnlike(data);
+  const { loading, likeUnlike } = useLikeUnlike();
+  const navigate = useNavigate();
 
   const handleLikeClick = () => {
     likeUnlike(data.id);
   };
 
-  const isUserLiked = blog?.likes_n?.some(
+  const handleCardClick = () => {
+    navigate(`/blogs/${data.id}`);
+  };
+
+  const isUserLiked = data?.likes_n?.some(
     (like) => like.user_id === currentUser.id
   );
 
   const likeBtnColor = isUserLiked && "primary.main";
-
+  
   return (
     <Grid item xs={12} sm={6} md={4} lg={3}>
       <Paper
@@ -31,7 +37,7 @@ const Card = ({ data, onClick }) => {
         }}
       >
         <Box
-          onClick={onClick}
+          onClick={handleCardClick}
           sx={{
             pb: 3,
             pt: 1,
@@ -40,7 +46,7 @@ const Card = ({ data, onClick }) => {
             },
           }}
         >
-          <Typography my={2}>{blog.title}</Typography>
+          <Typography my={2}>{data.title}</Typography>
           <Box
             sx={{
               width: "100%",
@@ -52,7 +58,7 @@ const Card = ({ data, onClick }) => {
             }}
           >
             <img
-              src={blog.image}
+              src={data.image}
               alt=""
               style={{ maxWidth: "100%", maxHeight: "100%" }}
             />
@@ -73,7 +79,7 @@ const Card = ({ data, onClick }) => {
             disabled={loading}
           >
             <ThumbUpIcon />
-            <Typography ml={1}>{blog.likes}</Typography>
+            <Typography ml={1}>{data.likes}</Typography>
           </IconButton>
           <Box
             sx={{
@@ -85,7 +91,7 @@ const Card = ({ data, onClick }) => {
             }}
           >
             <VisibilityIcon />
-            <Typography ml={1}>{blog.post_views}</Typography>
+            <Typography ml={1}>{data.post_views}</Typography>
           </Box>
           <Box
             sx={{
@@ -97,8 +103,9 @@ const Card = ({ data, onClick }) => {
             }}
           >
             <ChatIcon />
-            <Typography ml={1}>{blog.comment_count}</Typography>
+            <Typography ml={1}>{data.comment_count}</Typography>
           </Box>
+          {children}
         </Box>
       </Paper>
     </Grid>

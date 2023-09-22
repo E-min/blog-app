@@ -11,13 +11,11 @@ import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import Card from "./Card";
 import { useState } from "react";
-import { useNavigate } from "react-router";
 import { Search } from "@mui/icons-material";
 
 const Blogs = () => {
   const { blogs, loading } = useSelector(({ blog }) => blog);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [sort, setSort] = useState("");
 
   useEffect(() => {
@@ -46,10 +44,6 @@ const Blogs = () => {
       // No sorting
       break;
   }
-
-  const handleClick = (id) => {
-    navigate(`/blogs/${id}`);
-  };
 
   return (
     <Box mt={4} px={2} maxWidth="lg" mx="auto">
@@ -86,11 +80,7 @@ const Blogs = () => {
       </FormControl>
       <Grid container spacing={4}>
         {sortedBlogs.map((blog) => (
-          <Card
-            onClick={() => handleClick(blog.id)}
-            key={blog.id}
-            data={blog}
-          />
+          <Card key={blog.id + blog.title} data={blog} />
         ))}
       </Grid>
     </Box>

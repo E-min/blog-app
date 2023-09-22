@@ -1,33 +1,30 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import useGetBlogDetailsById from "./useGetBlogDetailsById";
+import axiosWithToken from "../services/axiosWithToken";
+import { useDispatch } from "react-redux";
 import { updateBlogs } from "../features/blogSlice";
-import axios from "axios";
-const URL = import.meta.env.VITE_APP_AUTH_BASE_URL;
 
-const useLikeUnlike = (data) => {
-  const { blog, getDetailsById } = useGetBlogDetailsById(data);
+const useLikeUnlike = () => {
   const [loading, setLoading] = useState(false);
-  const { token } = useSelector(({ auth }) => auth);
+  const blogAppWithToken = axiosWithToken();
   const dispatch = useDispatch();
 
   const likeUnlike = async (id) => {
     setLoading(true);
     try {
-      await axios.post(`${URL}/api/likes/${id}/`, null, {
-        headers: {
-          Authorization: `Token ${token}`,
-        },
-      });
-      await getDetailsById(id);
-      dispatch(updateBlogs(response));
+      const { data } = await blogAppWithToken.post(`/api/likes/${id}/`);
+      const totalLikes = data
+        .filter((like) => like.post === id)
+        .map((like) => ({ id: like.id, user_id: like.user, post: like.post }));
+        
+      dispatch(updateBlogs({ id, totalLikes }));
     } catch (err) {
+      console.log(err);
     } finally {
       setLoading(false);
     }
   };
 
-  return { blog, loading, likeUnlike };
+  return { loading, likeUnlike };
 };
 
 export default useLikeUnlike;

@@ -23,9 +23,16 @@ const blogSlice = createSlice({
       state.loading = false;
     },
     updateBlogs: (state, { payload }) => {
-      state.blogs = state.blogs.map((blog) =>
-        blog.id === payload.id ? payload : blog
-      );
+      state.blogs = state.blogs.map((blog) => {
+        if (blog.id === payload.id) {
+          return {
+            ...blog,
+            likes: payload.totalLikes.length,
+            likes_n: payload.totalLikes,
+          };
+        }
+        return blog;
+      });
     },
   },
 });

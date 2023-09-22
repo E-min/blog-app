@@ -1,19 +1,12 @@
-import axios from "axios";
-import store from "../app/store";
 import { logoutSuccess, fetchStart, fetchFailed } from "../features/authSlice";
-
-const URL = import.meta.env.VITE_APP_AUTH_BASE_URL;
+import axiosWithToken from "../services/axiosWithToken";
 
 const logout = () => {
-  const token = store.getState().auth.token;
+  const blogAppWithToken = axiosWithToken();
   return async (dispatch) => {
     dispatch(fetchStart());
     try {
-      const { data } = await axios.post(`${URL}/users/auth/logout/`, {
-        headers: {
-          Authorization: `Token ${token}`,
-        },
-      });
+      await blogAppWithToken.post("/users/auth/logout/");
       dispatch(logoutSuccess());
     } catch (error) {
       dispatch(fetchFailed(error.response.data.non_field_errors[0]));

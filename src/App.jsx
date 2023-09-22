@@ -15,7 +15,7 @@ const App = () => {
   const toggleTheme = () => {
     setIsDarkTheme((prev) => !prev);
   };
-   
+
   const theme = isDarkTheme ? darkTheme : lightTheme;
 
   return (

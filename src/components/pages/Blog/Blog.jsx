@@ -4,7 +4,9 @@ import {
   Box,
   Button,
   FormControl,
+  MenuItem,
   Paper,
+  Select,
   TextField,
   Toolbar,
   Typography,
@@ -14,13 +16,22 @@ import useGetBlogDetailsById from "../../../hooks/useGetBlogDetailsById";
 import Comment from "./Comment";
 import { useState } from "react";
 import useSendComment from "../../../hooks/useSendComment";
+import { useSelector } from "react-redux";
+import useGetCategories from "../../../hooks/useGetCategories";
+import useSendEditedBlog from "../../../hooks/useSendEditedBlog";
 
 const Blog = () => {
-  const { id } = useParams();
-  const { blog, loading, getDetailsById } = useGetBlogDetailsById();
-  const [inputText, setInputText] = useState({ post: id, content: "" });
   const { error, commentLoading, sendComment } = useSendComment();
+  const { categories, getBlogCategories } = useGetCategories();
+  const { loadingSEB, errorSEB, sendEditedBlog } = useSendEditedBlog();
+  const { id } = useParams();
+  const { currentUser } = useSelector(({ auth }) => auth);
+  const { blog, loading, getDetailsById } = useGetBlogDetailsById();
+  const [inputComment, setInputComment] = useState({ post: id, content: "" });
+  const [editModeInput, setEditModeInput] = useState();
   const maxCommentLength = 200;
+  const authorMode = currentUser.username === blog.author;
+  const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
     getDetailsById(id);
@@ -40,36 +51,139 @@ const Blog = () => {
   const handleInputChange = (e) => {
     const inputValue = e.target.value;
     if (inputValue.length <= maxCommentLength) {
-      setInputText((prev) => ({ ...prev, content: inputValue }));
+      setInputComment((prev) => ({ ...prev, content: inputValue }));
     } else {
-      setInputText((prev) => ({
+      setInputComment((prev) => ({
         ...prev,
         content: inputValue.slice(0, maxCommentLength),
       }));
     }
   };
+
   const handleSendComment = (e) => {
     e.preventDefault();
     e.target.reset();
-    setInputText({ post: id, content: "" });
-    sendComment(id, inputText, getDetailsById);
+    setInputComment({ post: id, content: "" });
+    sendComment(id, inputComment, getDetailsById);
+  };
+
+  const handleEditMode = () => {
+    const { id, title, content, image, category, status } = blog;
+    setEditMode(true);
+    setEditModeInput({ id, title, content, image, category, status });
+  };
+
+  const handleEditModeInputChange = (e) => {
+    setEditModeInput((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSendEditedBlog = () => {
+    sendEditedBlog(editModeInput, id, getDetailsById, setEditMode);
   };
 
   return (
     <Box maxWidth="sm" mx="auto">
       <Toolbar />
+      <Box sx={{ float: "right", m: 2 }}>
+        {authorMode &&
+          (editMode ? (
+            <>
+              <Button onClick={() => setEditMode(false)}>Cancel</Button>
+              <Button
+                color="success"
+                variant="contained"
+                onClick={handleSendEditedBlog}
+                disabled={loadingSEB}
+              >
+                Save
+              </Button>
+            </>
+          ) : (
+            <Button
+              variant="contained"
+              onClick={handleEditMode}
+              disabled={categories.loading}
+            >
+              Edit
+            </Button>
+          ))}
+      </Box>
       <Paper sx={{ p: 2, pb: 4 }}>
-        <Box sx={{ borderBottom: 1, mb: 1, py: 1 }}>
+        <Box sx={{ borderBottom: 1, pb: 1 }}>
           <Typography>Author: {blog.author}</Typography>
-          <Typography>Category: {blog.category_name}</Typography>
+          {editMode ? (
+            <>
+              <label id="category-label">Category: </label>
+              <Select
+                labelId="category-label"
+                id="category"
+                name="category"
+                value={editModeInput.category}
+                label="Age"
+                size="small"
+                error={errorSEB}
+                variant="standard"
+                onChange={handleEditModeInputChange}
+              >
+                {categories.data.map((category) => (
+                  <MenuItem key={category.name} value={category.id}>
+                    {category.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </>
+          ) : (
+            <Typography>Category: {blog.category_name}</Typography>
+          )}
           <Typography>
             Publish Date: {convertToLocalDate(blog.publish_date)}
           </Typography>
         </Box>
-        <Typography component="h2" variant="h4" sx={{ my: 2 }}>
-          {blog.title}
-        </Typography>
-        <Typography sx={{ letterSpacing: 0.5 }}>{blog.content}</Typography>
+        {editMode ? (
+          <>
+            <TextField
+              margin="normal"
+              label="Cover Image Url"
+              name="image"
+              id="image"
+              fullWidth
+              multiline
+              error={errorSEB}
+              value={editModeInput.image}
+              onChange={handleEditModeInputChange}
+            />
+            <TextField
+              margin="dense"
+              label="Title"
+              name="title"
+              id="title"
+              fullWidth
+              multiline
+              error={errorSEB}
+              value={editModeInput.title}
+              onChange={handleEditModeInputChange}
+            />
+            <TextField
+              margin="dense"
+              label="Contnet"
+              name="content"
+              id="content"
+              fullWidth
+              multiline
+              value={editModeInput.content}
+              error={errorSEB}
+              helperText={errorSEB && "Edited Blog Couldn't sent"}
+              onChange={handleEditModeInputChange}
+            />
+          </>
+        ) : (
+          <>
+            <Typography component="h2" variant="h4" sx={{ my: 2 }}>
+              {blog.title}
+            </Typography>
+            <Typography sx={{ letterSpacing: 0.5 }}>{blog.content}</Typography>
+          </>
+        )}
       </Paper>
       <Paper sx={{ mt: 4, p: 2 }}>
         <FormControl component="form" onSubmit={handleSendComment} fullWidth>
@@ -79,7 +193,7 @@ const Blog = () => {
             multiline
             rows={4}
             sx={{ my: 2 }}
-            value={inputText.content}
+            value={inputComment.content}
             onChange={handleInputChange}
             error={error}
             helperText={error && "Comment couldn't sent"}
@@ -94,7 +208,7 @@ const Blog = () => {
                     fontSize: 14,
                   }}
                 >
-                  {inputText.content.length}/{maxCommentLength}
+                  {inputComment.content.length}/{maxCommentLength}
                 </Typography>
               ),
             }}

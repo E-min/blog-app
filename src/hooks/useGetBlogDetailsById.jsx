@@ -1,21 +1,15 @@
 import { useState } from "react";
-import axios from "axios";
-import { useSelector } from "react-redux";
-const URL = import.meta.env.VITE_APP_AUTH_BASE_URL;
+import axiosWithToken from "../services/axiosWithToken";
 
-const useGetBlogDetailsById = (data = {}) => {
-  const { token } = useSelector(({ auth }) => auth);
-  const [blog, setBlog] = useState(data);
+const useGetBlogDetailsById = () => {
+  const blogAppWithToken = axiosWithToken();
+  const [blog, setBlog] = useState({});
   const [loading, setLoading] = useState(false);
 
   const getDetailsById = async (id) => {
     setLoading(true);
     try {
-      const { data } = await axios.get(`${URL}/api/blogs/${id}/`, {
-        headers: {
-          Authorization: `Token ${token}`,
-        },
-      });
+      const { data } = await blogAppWithToken.get(`/api/blogs/${id}/`);
       setBlog(data);
     } catch (error) {
       console.log(error);

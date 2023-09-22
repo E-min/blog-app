@@ -13,15 +13,25 @@ import MenuItem from "@mui/material/MenuItem";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import logout from "../thunks/logout";
+import { NavLink } from "react-router-dom";
+import { useTheme } from "@mui/material/styles";
 
-const pages = ["Home", "Blogs", "About"];
-const settings = ["Profile", "Logout"];
+const pages = [
+  { title: "Dashboard", to: "/blogs" },
+  { title: "About", to: "/about" },
+];
+const settings = [
+  { title: "Profile", to: "/blogs/profile" },
+  { title: "My Blogs", to: "/blogs/myblogs" },
+  { title: "Logout" },
+];
 
 const Navbar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const { currentUser } = useSelector(({ auth }) => auth);
   const dispatch = useDispatch();
+  const theme = useTheme();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -91,8 +101,13 @@ const Navbar = () => {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+                <MenuItem
+                  onClick={handleCloseNavMenu}
+                  key={page.title}
+                  component={NavLink}
+                  to={page.to}
+                >
+                  {page.title}
                 </MenuItem>
               ))}
             </Menu>
@@ -116,11 +131,13 @@ const Navbar = () => {
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
-                key={page}
+                key={page.title}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
+                sx={{ my: 2, display: "block", color: "text.primary" }}
+                component={NavLink}
+                to={page.to}
               >
-                {page}
+                {page.title}
               </Button>
             ))}
           </Box>
@@ -147,16 +164,26 @@ const Navbar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              <Typography sx={{ textAlign: "center", pb: 1, px: 2, borderBottom: 1, borderColor: "primary.main" }}>
+              <Typography
+                sx={{
+                  textAlign: "center",
+                  pb: 1,
+                  px: 2,
+                  borderBottom: 1,
+                  borderColor: "primary.main",
+                }}
+              >
                 {currentUser.username}
               </Typography>
               {settings.map((setting) => (
                 <MenuItem
-                  key={setting}
-                  id={setting.toLowerCase()}
+                  key={setting.title}
+                  id={setting.title.toLowerCase()}
                   onClick={handleCloseUserMenu}
+                  component={NavLink}
+                  to={setting.to}
                 >
-                  <Typography textAlign="center">{setting}</Typography>
+                  {setting.title}
                 </MenuItem>
               ))}
             </Menu>
