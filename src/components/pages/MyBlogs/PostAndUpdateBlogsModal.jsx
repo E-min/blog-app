@@ -1,7 +1,11 @@
-import { Box, Button, FormControl, Modal, TextField } from "@mui/material";
+import { useState, useEffect } from "react";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Modal from "@mui/material/Modal";
+import TextField from "@mui/material/TextField";
 import CategoriesSelect from "../CategoriesSelect";
-import { useState } from "react";
 import usePostNewBlog from "../../../hooks/usePostNewBlog";
+import useUpdateBlog from "../../../hooks/useUpdateBlog";
 
 const initialState = {
   category: "",
@@ -11,20 +15,52 @@ const initialState = {
   status: "p",
 };
 
-export default function PostNewBlogsModal({ handleClose, openModal }) {
+export default function PostAndUpdateBlogsModal({
+  handleClose,
+  openModal,
+  blog = {},
+  refreshBlog,
+}) {
   const [formInput, setFormInput] = useState(initialState);
   const { loading, error, postNewBlog } = usePostNewBlog();
+  const { updateBlog } = useUpdateBlog();
+  const editModeActive = Object.keys(blog).length !== 0;
+
+  useEffect(() => {
+    if (editModeActive) {
+      const { category, image, title, content, status } = blog;
+      setFormInput({
+        category,
+        image,
+        title,
+        content: JSON.parse(content),
+        status,
+      });
+    }
+  }, [blog]);
 
   const handleChange = (e) => {
     setFormInput((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSumbit = () => {
+  const handleSumbitNewBlog = () => {
     const onSuccessfullSent = () => {
       handleClose();
       setFormInput(initialState);
     };
-    postNewBlog(formInput, onSuccessfullSent);
+    postNewBlog(
+      { ...formInput, content: JSON.stringify(formInput.content) },
+      onSuccessfullSent
+    );
+  };
+
+  const handleSubmitUpdateBlog = () => {
+    updateBlog(
+      { ...formInput, content: JSON.stringify(formInput.content) },
+      blog.id,
+      refreshBlog,
+      handleClose
+    );
   };
 
   return (
@@ -44,7 +80,8 @@ export default function PostNewBlogsModal({ handleClose, openModal }) {
           bgcolor: "background.paper",
           border: "2px solid #000",
           boxShadow: 24,
-          p: 4,
+          py: 4,
+          px: 2,
           maxHeight: "100vh",
           overflowY: "auto",
         }}
@@ -61,7 +98,6 @@ export default function PostNewBlogsModal({ handleClose, openModal }) {
           name="image"
           id="image"
           fullWidth
-          multiline
           value={formInput.image}
           onChange={handleChange}
         />
@@ -71,7 +107,6 @@ export default function PostNewBlogsModal({ handleClose, openModal }) {
           name="title"
           id="title"
           fullWidth
-          multiline
           value={formInput.title}
           onChange={handleChange}
         />
@@ -87,13 +122,17 @@ export default function PostNewBlogsModal({ handleClose, openModal }) {
           onChange={handleChange}
         />
         <Box sx={{ textAlign: "right", mt: 2 }}>
-          <Button sx={{mr: 1}} onClick={handleClose}>Cancel</Button>
+          <Button sx={{ mr: 1 }} onClick={handleClose}>
+            Cancel
+          </Button>
           <Button
-            onClick={handleSumbit}
+            onClick={
+              editModeActive ? handleSubmitUpdateBlog : handleSumbitNewBlog
+            }
             variant="contained"
             disabled={loading}
           >
-            SEND
+            {editModeActive ? "Save" : "Send"}
           </Button>
         </Box>
       </Box>

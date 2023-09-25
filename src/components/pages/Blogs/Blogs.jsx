@@ -12,6 +12,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Card from "./Card";
 import { useState } from "react";
 import { Search } from "@mui/icons-material";
+import CardSkeleton from "../../Skeletons/CardSkeleton";
 
 const Blogs = () => {
   const { blogs, loading } = useSelector(({ blog }) => blog);
@@ -79,9 +80,13 @@ const Blogs = () => {
         </Select>
       </FormControl>
       <Grid container spacing={4}>
-        {sortedBlogs.map((blog) => (
-          <Card key={blog.id + blog.title} data={blog} />
-        ))}
+        {loading
+          ? Array.from({ length: 8 }, (_, index) => (
+              <CardSkeleton key={index} />
+            ))
+          : sortedBlogs.map((blog) => (
+              <Card key={blog.id + blog.title} data={blog} />
+            ))}
       </Grid>
     </Box>
   );

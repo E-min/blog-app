@@ -1,12 +1,12 @@
 import { useState } from "react";
 import axiosWithToken from "../services/axiosWithToken";
 
-const useSendEditedBlog = () => {
+const useUpdateBlog = () => {
   const [loadingSEB, setLoadingSEB] = useState(false);
   const [errorSEB, setErrorSEB] = useState(false);
   const blogAppWithToken = axiosWithToken();
 
-  const sendEditedBlog = async (obj, id, refresh, setEditMode) => {
+  const updateBlog = async (obj, id, refresh, setEditMode) => {
     setLoadingSEB(true);
     setErrorSEB(false)
     try {
@@ -20,7 +20,7 @@ const useSendEditedBlog = () => {
       setLoadingSEB(false);
     }
   };
-  return { loadingSEB, errorSEB, sendEditedBlog };
+  return { loadingSEB, errorSEB, updateBlog };
 };
 
-export default useSendEditedBlog;
+export default useUpdateBlog;

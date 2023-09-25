@@ -1,7 +1,7 @@
 import { useState } from "react";
 import blogApp from "../services/axiosWithBaseUrl";
 
-const initialState = { loading: false, error: false, data: [] };
+const initialState = { loading: true, error: false, data: [] };
 
 const useGetCategories = () => {
   const [categories, setCategories] = useState(initialState);

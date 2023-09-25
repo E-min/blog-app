@@ -8,7 +8,7 @@ const getBlogs = () => {
       const { data } = await blogApp.get(`/api/blogs/`);
       dispatch(fetchBlogs(data));
     } catch (error) {
-      dispatch(fetchFailed(error.response.data.non_field_errors[0]));
+      dispatch(fetchFailed(error));
     }
   };
 };

@@ -16,7 +16,7 @@ const CategoriesSelect = ({ value, error, handleChange }) => {
         labelId="category-label"
         id="category"
         name="category"
-        value={value}
+        value={categories.loading ? "": value}
         label="Category"
         error={error || categories.error}
         variant="outlined"

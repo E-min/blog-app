@@ -15,11 +15,12 @@ import Card from "../Blogs/Card";
 import { useState } from "react";
 import { useRef } from "react";
 import useDeleteBlogs from "../../../hooks/useDeleteBlogs";
-import PostNewBlogsModal from "./PostNewBlogsModal";
+import PostAndUpdateBlogsModal from "./PostAndUpdateBlogsModal";
+import CardSkeleton from "../../Skeletons/CardSkeleton";
 
 const MyBlogs = () => {
   const { currentUser } = useSelector(({ auth }) => auth);
-  const { blogs } = useSelector(({ blog }) => blog);
+  const { blogs, loading } = useSelector(({ blog }) => blog);
   const {loadingDel, errorDel, deleteBlogs } = useDeleteBlogs();
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openNewPost, setOpenNewPost] = useState(false);
@@ -52,7 +53,7 @@ const MyBlogs = () => {
 
   return (
     <Box maxWidth="lg" m="auto" px={4}>
-      <PostNewBlogsModal
+      <PostAndUpdateBlogsModal
         handleClose={() => setOpenNewPost(false)}
         openModal={openNewPost}
       />
@@ -68,7 +69,8 @@ const MyBlogs = () => {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: 400,
+            width: "100%",
+            maxWidth: 400,
             bgcolor: "background.paper",
             border: "2px solid #000",
             boxShadow: 24,
@@ -80,7 +82,7 @@ const MyBlogs = () => {
             <strong>{openConfirm && confirmDelBlog.current.title}</strong> will
             be deleted.
           </Typography>
-          <Button disabled={loadingDel} onClick={handleDelete} variant="contained">
+          <Button sx={{mr: 2}} disabled={loadingDel} onClick={handleDelete} variant="contained">
             Yes
           </Button>
           <Button onClick={() => setOpenConfirm(false)}>No</Button>
@@ -99,7 +101,11 @@ const MyBlogs = () => {
         </Button>
       </Box>
       <Grid container spacing={4}>
-        {userBlogs.length ? (
+        {loading
+          ? Array.from({ length: 8 }, (_, index) => (
+              <CardSkeleton key={index} />
+            ))
+          : userBlogs.length ? (
           userBlogs.map((blog) => (
             <Card key={blog.title + blog.id} data={blog}>
               <IconButton
