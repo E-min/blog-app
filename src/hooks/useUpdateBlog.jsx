@@ -2,25 +2,29 @@ import { useState } from "react";
 import axiosWithToken from "../services/axiosWithToken";
 
 const useUpdateBlog = () => {
-  const [loadingSEB, setLoadingSEB] = useState(false);
-  const [errorSEB, setErrorSEB] = useState(false);
+  const [updateBlog, setUpdateBlog] = useState({
+    loading: false,
+    error: false,
+  });
   const blogAppWithToken = axiosWithToken();
 
-  const updateBlog = async (obj, id, refresh, setEditMode) => {
-    setLoadingSEB(true);
-    setErrorSEB(false)
+  const callUpdateBlog = async (obj, id, onSuccess) => {
+    const data = {
+      ...obj,
+      content: JSON.stringify(obj.content),
+    };
+    setUpdateBlog({ loading: true, error: false });
     try {
-      await blogAppWithToken.put(`/api/blogs/${id}/`, obj);
-      await refresh(id)
-      setEditMode(false)
-    } catch (errorSEB) {
-      console.log(errorSEB);
-      setErrorSEB(true)
-    } finally {
-      setLoadingSEB(false);
+      await blogAppWithToken.put(`/api/blogs/${id}/`, data);
+      onSuccess();
+      setUpdateBlog({ loading: false, error: false });
+    } catch (error) {
+      console.log(error);
+      setUpdateBlog({ loading: false, error: true });
     }
   };
-  return { loadingSEB, errorSEB, updateBlog };
+
+  return { updateBlog, callUpdateBlog };
 };
 
 export default useUpdateBlog;

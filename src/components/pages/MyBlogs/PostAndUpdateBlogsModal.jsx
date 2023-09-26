@@ -18,16 +18,15 @@ const initialState = {
 export default function PostAndUpdateBlogsModal({
   handleClose,
   openModal,
-  blog = {},
+  blog,
   refreshBlog,
 }) {
   const [formInput, setFormInput] = useState(initialState);
-  const { loading, error, postNewBlog } = usePostNewBlog();
-  const { updateBlog } = useUpdateBlog();
-  const editModeActive = Object.keys(blog).length !== 0;
+  const { newBlog, callPostBlog } = usePostNewBlog();
+  const { updateBlog, callUpdateBlog } = useUpdateBlog();
 
   useEffect(() => {
-    if (editModeActive) {
+    if (blog) {
       const { category, image, title, content, status } = blog;
       setFormInput({
         category,
@@ -40,27 +39,24 @@ export default function PostAndUpdateBlogsModal({
   }, [blog]);
 
   const handleChange = (e) => {
-    setFormInput((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setFormInput((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSumbitNewBlog = () => {
-    const onSuccessfullSent = () => {
+    const onSuccess = () => {
       handleClose();
       setFormInput(initialState);
     };
-    postNewBlog(
-      { ...formInput, content: JSON.stringify(formInput.content) },
-      onSuccessfullSent
-    );
+    callPostBlog(formInput, onSuccess);
   };
 
   const handleSubmitUpdateBlog = () => {
-    updateBlog(
-      { ...formInput, content: JSON.stringify(formInput.content) },
-      blog.id,
-      refreshBlog,
-      handleClose
-    );
+    const onSuccess = () => {
+      refreshBlog(blog.id);
+      handleClose();
+    };
+    callUpdateBlog(formInput, blog.id, onSuccess);
   };
 
   return (
@@ -127,12 +123,12 @@ export default function PostAndUpdateBlogsModal({
           </Button>
           <Button
             onClick={
-              editModeActive ? handleSubmitUpdateBlog : handleSumbitNewBlog
+              blog ? handleSubmitUpdateBlog : handleSumbitNewBlog
             }
             variant="contained"
-            disabled={loading}
+            disabled={blog ? updateBlog.loading : newBlog.loading}
           >
-            {editModeActive ? "Save" : "Send"}
+            {blog ? "Save" : "Send"}
           </Button>
         </Box>
       </Box>

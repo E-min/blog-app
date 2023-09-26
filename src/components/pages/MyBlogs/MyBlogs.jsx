@@ -1,31 +1,30 @@
-import {
-  Box,
-  Button,
-  Grid,
-  IconButton,
-  Modal,
-  Typography,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import IconButton from "@mui/material/IconButton";
+import Modal from "@mui/material/Modal";
+import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
+import PostAndUpdateBlogsModal from "./PostAndUpdateBlogsModal";
+import useDeleteBlogs from "../../../hooks/useDeleteBlogs";
+import CardSkeleton from "../../Skeletons/CardSkeleton";
 import getBlogs from "../../../thunks/getBlogs";
 import Card from "../Blogs/Card";
-import { useState } from "react";
-import { useRef } from "react";
-import useDeleteBlogs from "../../../hooks/useDeleteBlogs";
-import PostAndUpdateBlogsModal from "./PostAndUpdateBlogsModal";
-import CardSkeleton from "../../Skeletons/CardSkeleton";
 
 const MyBlogs = () => {
   const { currentUser } = useSelector(({ auth }) => auth);
   const { blogs, loading } = useSelector(({ blog }) => blog);
-  const {loadingDel, errorDel, deleteBlogs } = useDeleteBlogs();
+  const { delBlogs, deleteBlogs } = useDeleteBlogs();
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openNewPost, setOpenNewPost] = useState(false);
   const dispatch = useDispatch();
   const confirmDelBlog = useRef();
+  const userBlogs = blogs.filter(
+    (blog) => blog.author === currentUser.username
+  );
 
   useEffect(() => {
     dispatch(getBlogs());
@@ -42,14 +41,11 @@ const MyBlogs = () => {
 
   const handleDelete = () => {
     const onSuccess = () => {
-      setOpenConfirm(false)
-    }
+      setOpenConfirm(false);
+      dispatch(getBlogs());
+    };
     deleteBlogs(confirmDelBlog.current.id, onSuccess);
   };
-
-  const userBlogs = blogs.filter(
-    (blog) => blog.author === currentUser.username
-  );
 
   return (
     <Box maxWidth="lg" m="auto" px={4}>
@@ -82,12 +78,20 @@ const MyBlogs = () => {
             <strong>{openConfirm && confirmDelBlog.current.title}</strong> will
             be deleted.
           </Typography>
-          <Button sx={{mr: 2}} disabled={loadingDel} onClick={handleDelete} variant="contained">
+          <Button
+            sx={{ mr: 2 }}
+            disabled={delBlogs.loading}
+            onClick={handleDelete}
+            variant="contained"
+          >
             Yes
           </Button>
           <Button onClick={() => setOpenConfirm(false)}>No</Button>
-          {errorDel && <Typography sx={{color: "error.main", mt: 1}}>
-            Couldn't deleted</Typography>}
+          {delBlogs.error && (
+            <Typography sx={{ color: "error.main", mt: 1 }}>
+              Couldn't deleted
+            </Typography>
+          )}
         </Box>
       </Modal>
       <Box my={4}>
@@ -101,11 +105,9 @@ const MyBlogs = () => {
         </Button>
       </Box>
       <Grid container spacing={4}>
-        {loading
-          ? Array.from({ length: 8 }, (_, index) => (
-              <CardSkeleton key={index} />
-            ))
-          : userBlogs.length ? (
+        {loading ? (
+          Array.from({ length: 8 }, (_, index) => <CardSkeleton key={index} />)
+        ) : userBlogs.length ? (
           userBlogs.map((blog) => (
             <Card key={blog.title + blog.id} data={blog}>
               <IconButton
@@ -116,7 +118,9 @@ const MyBlogs = () => {
             </Card>
           ))
         ) : (
-          <Typography sx={{color: "text.secondary"}} mx="auto" mt={2}>There is no posted blogs</Typography>
+          <Typography sx={{ color: "text.secondary" }} mx="auto" mt={2}>
+            There is no posted blogs
+          </Typography>
         )}
       </Grid>
     </Box>

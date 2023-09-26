@@ -75,17 +75,14 @@ const Blog = () => {
           <Typography component="h2" variant="h4" sx={{ my: 2 }}>
             {blog.title}
           </Typography>
-          <Typography sx={{ letterSpacing: 0.5 }}>
-            {blog.content
-              ?.slice(1, -1)
-              .split("\\n")
-              .map((line, i) => (
-                <Fragment key={i}>
-                  {line}
-                  <br />
-                </Fragment>
-              ))}
-          </Typography>
+          {blog.content
+            ?.slice(1, -1)
+            .split(/\\n/g)
+            .map((line, i) => (
+              <Typography sx={{ letterSpacing: 0.6, mb: 3 }} key={i}>
+                {JSON.parse(`"${line}"`)}
+              </Typography>
+            ))}
         </Paper>
       )}
       <Paper sx={{ mt: 4, p: 2 }}>

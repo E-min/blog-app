@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import getBlogs from "../../../thunks/getBlogs";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import FormControl from "@mui/material/FormControl";
@@ -9,27 +8,15 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
-import Card from "./Card";
-import { useState } from "react";
 import { Search } from "@mui/icons-material";
+import getBlogs from "../../../thunks/getBlogs";
 import CardSkeleton from "../../Skeletons/CardSkeleton";
+import Card from "./Card";
 
-const Blogs = () => {
-  const { blogs, loading } = useSelector(({ blog }) => blog);
-  const dispatch = useDispatch();
-  const [sort, setSort] = useState("");
+const sortBlogs = (arr, type) => {
+  const sortedBlogs = [...arr];
 
-  useEffect(() => {
-    dispatch(getBlogs());
-  }, []);
-
-  const handleChange = (e) => {
-    setSort(e.target.value);
-  };
-
-  const sortedBlogs = [...blogs];
-
-  switch (sort) {
+  switch (type) {
     case 10: // Sort by Date
       sortedBlogs.sort(
         (a, b) => new Date(b.publish_date) - new Date(a.publish_date)
@@ -45,6 +32,21 @@ const Blogs = () => {
       // No sorting
       break;
   }
+  return sortedBlogs;
+};
+
+export default function Blogs() {
+  const { blogs, loading } = useSelector(({ blog }) => blog);
+  const dispatch = useDispatch();
+  const [sort, setSort] = useState("");
+
+  useEffect(() => {
+    dispatch(getBlogs());
+  }, []);
+
+  const handleChange = (e) => {
+    setSort(e.target.value);
+  };
 
   return (
     <Box mt={4} px={2} maxWidth="lg" mx="auto">
@@ -84,12 +86,10 @@ const Blogs = () => {
           ? Array.from({ length: 8 }, (_, index) => (
               <CardSkeleton key={index} />
             ))
-          : sortedBlogs.map((blog) => (
+          : sortBlogs(blogs, sort).map((blog) => (
               <Card key={blog.id + blog.title} data={blog} />
             ))}
       </Grid>
     </Box>
   );
-};
-
-export default Blogs;
+}

@@ -1,29 +1,22 @@
 import { useState } from "react";
 import axiosWithToken from "../services/axiosWithToken";
-import { useDispatch } from "react-redux";
-import getBlogs from "../thunks/getBlogs";
 
 const useDeleteBlogs = () => {
   const blogAppWithToken = axiosWithToken();
-  const [loadingDel, setLoadingDel] = useState(false);
-  const [errorDel, setErrorDel] = useState(false);
-  const dispatch = useDispatch()
+  const [delBlogs, setDelBlogs] = useState(false);
 
   const deleteBlogs = async (id, onSuccess) => {
-    setLoadingDel(true);
-    setErrorDel(false);
+    setDelBlogs({ loading: true, error: false });
     try {
       await blogAppWithToken.delete(`/api/blogs/${id}`);
-      dispatch(getBlogs());
-      onSuccess()
+      onSuccess();
+      setDelBlogs({ loading: false, error: false });
     } catch (error) {
-      setErrorDel(true);
-    } finally {
-      setLoadingDel(false);
+      setDelBlogs({ loading: false, error: true });
     }
   };
 
-  return {loadingDel, errorDel, deleteBlogs}
+  return { delBlogs, deleteBlogs };
 };
 
 export default useDeleteBlogs;
