@@ -62,7 +62,7 @@ const EffectField = () => {
           overflowY: "auto",
           overflowX: "hidden",
           height: "100%",
-          py: 8,
+          py: 10,
           px: 0.5,
           background: theme.palette.background.default,
         }}

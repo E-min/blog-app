@@ -18,7 +18,6 @@ const Cube = ({ specs, removeCube }) => {
     backgroundColor: color,
     boxShadow: `0 0 ${width}px 0 ${color}`,
     opacity,
-    filter: "blur(4px)",
   };
   const laserStyle = {
     position: "absolute",
