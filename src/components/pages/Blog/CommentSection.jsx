@@ -7,12 +7,18 @@ import Comment from "./Comment";
 import SendIcon from "@mui/icons-material/Send";
 import useSendComment from "../../../hooks/useSendComment";
 import { useState } from "react";
+import { useEffect } from "react";
 
 export default function CommentSection({ blog, convertDate, refreshPage }) {
   const [inputComment, setInputComment] = useState({
-    post: blog.id,
+    post: "",
     content: "",
   });
+
+  useEffect(() => {
+    setInputComment((prev) => ({ ...prev, post: blog.id }));
+  }, [blog]);
+
   const { error, commentLoading, sendComment } = useSendComment();
   const maxCommentLength = 200;
 
@@ -31,8 +37,8 @@ export default function CommentSection({ blog, convertDate, refreshPage }) {
   const handleSendComment = (e) => {
     e.preventDefault();
     e.target.reset();
-    setInputComment({ post: blog.id, content: "" });
-    sendComment(blog.id, inputComment, refreshPage);
+    setInputComment((prev) => ({ ...prev, content: "" }));
+    sendComment(inputComment, refreshPage);
   };
   return (
     <>

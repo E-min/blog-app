@@ -6,12 +6,12 @@ const useSendComment = () => {
   const [error, setError] = useState(false);
   const [commentLoading, setCommentLoading] = useState(false);
 
-  const sendComment = async (id, object, getComments) => {
+  const sendComment = async (object, getComments) => {
     setCommentLoading(true);
     setError(false);
     try {
-      await blogAppWithToken.post(`/api/comments/${id}/`, object);
-      await getComments(id);
+      await blogAppWithToken.post(`/api/comments/${object.post}/`, object);
+      await getComments(object.post);
     } catch (error) {
       console.log(error);
       setError(true);
