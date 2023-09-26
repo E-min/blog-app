@@ -77,7 +77,7 @@ const Blog = () => {
         </Typography>
       </Paper>)}
       <Paper sx={{ mt: 4, p: 2 }}>
-        <CommentSection blog={blog} convertDate={convertToLocalDate} />
+        <CommentSection blog={blog} convertDate={convertToLocalDate} refreshPage={getDetailsById} />
       </Paper>
     </Box>
   );

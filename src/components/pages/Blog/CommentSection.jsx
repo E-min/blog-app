@@ -8,7 +8,7 @@ import SendIcon from "@mui/icons-material/Send";
 import useSendComment from "../../../hooks/useSendComment";
 import { useState } from "react";
 
-export default function CommentSection({ blog, convertDate }) {
+export default function CommentSection({ blog, convertDate, refreshPage }) {
   const [inputComment, setInputComment] = useState({
     post: blog.id,
     content: "",
@@ -32,7 +32,7 @@ export default function CommentSection({ blog, convertDate }) {
     e.preventDefault();
     e.target.reset();
     setInputComment({ post: blog.id, content: "" });
-    sendComment(blog.id, inputComment, getDetailsById);
+    sendComment(blog.id, inputComment, refreshPage);
   };
   return (
     <>
