@@ -48,7 +48,7 @@ const MyBlogs = () => {
   };
 
   return (
-    <Box maxWidth="lg" m="auto" px={4}>
+    <Box maxWidth="lg" m="auto" px={4} className="scrollable-content">
       <PostAndUpdateBlogsModal
         handleClose={() => setOpenNewPost(false)}
         openModal={openNewPost}

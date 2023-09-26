@@ -3,14 +3,13 @@ import {
   fetchStart,
   registerSuccess,
 } from "../features/authSlice";
-import axiosWithToken from "../services/axiosWithToken";
+import blogApp from "../services/axiosWithBaseUrl";
 
 const register = (object) => {
-  const blogAppWithToken = axiosWithToken();
   return async (dispatch) => {
     dispatch(fetchStart());
     try {
-      const { data } = await blogAppWithToken.post("/users/register/", object);
+      const { data } = await blogApp.post("/users/register/", object);
       dispatch(registerSuccess(data));
     } catch (error) {
       dispatch(fetchFailed(error.response.data));

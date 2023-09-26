@@ -9,7 +9,6 @@ import Container from "@mui/material/Container";
 import { useDispatch, useSelector } from "react-redux";
 import register from "../../thunks/register";
 import { useState } from "react";
-import EffectField from "../animation/EffectField";
 import { useTheme } from "@mui/material/styles";
 import Copyright from "../copyright/Copyright";
 
@@ -36,7 +35,7 @@ const Register = () => {
     event.preventDefault();
     dispatch(register(formInputs)).then(() => {
       if (isLoggedIn) {
-        navigate("/dashboard");
+        navigate("/blog-app");
       }
     });
   };
@@ -119,7 +118,7 @@ const Register = () => {
               id="bio"
               label="Profile Bio"
               name="bio"
-              type="url"
+              type="text"
               variant="standard"
               value={formInputs.bio}
               onChange={handleInputChange}

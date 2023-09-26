@@ -42,7 +42,7 @@ const Blog = () => {
   }, []);
 
   return (
-    <Box maxWidth="sm" mx="auto" px={1}>
+    <Box maxWidth="sm" mx="auto" px={1} className="scrollable-content">
       <Toolbar />
       {authorMode && (
         <>

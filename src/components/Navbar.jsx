@@ -17,12 +17,12 @@ import { NavLink } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 
 const pages = [
-  { title: "Dashboard", to: "/blogs" },
-  { title: "About", to: "/about" },
+  { title: "Dashboard", to: "/blog-app" },
+  { title: "About", to: "/blog-app/about" },
 ];
 const settings = [
-  { title: "Profile", to: "/blogs/profile" },
-  { title: "My Blogs", to: "/blogs/myblogs" },
+  { title: "Profile", to: "/blog-app/profile" },
+  { title: "My Blogs", to: "/blog-app/myblogs" },
   { title: "Logout" },
 ];
 

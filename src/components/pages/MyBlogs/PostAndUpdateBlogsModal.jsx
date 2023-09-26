@@ -67,6 +67,7 @@ export default function PostAndUpdateBlogsModal({
       aria-describedby="modal-delete-confirmation"
     >
       <Box
+        className="scrollable-content"
         sx={{
           position: "absolute",
           top: "50%",
@@ -80,6 +81,7 @@ export default function PostAndUpdateBlogsModal({
           px: 2,
           maxHeight: "100vh",
           overflowY: "auto",
+          overflowX: "hidden",
         }}
         maxWidth="sm"
       >
@@ -122,9 +124,7 @@ export default function PostAndUpdateBlogsModal({
             Cancel
           </Button>
           <Button
-            onClick={
-              blog ? handleSubmitUpdateBlog : handleSumbitNewBlog
-            }
+            onClick={blog ? handleSubmitUpdateBlog : handleSumbitNewBlog}
             variant="contained"
             disabled={blog ? updateBlog.loading : newBlog.loading}
           >

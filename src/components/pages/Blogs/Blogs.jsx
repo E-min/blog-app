@@ -49,7 +49,7 @@ export default function Blogs() {
   };
 
   return (
-    <Box mt={4} px={2} maxWidth="lg" mx="auto">
+    <Box mt={4} px={2} maxWidth="lg" mx="auto" className="scrollable-content">
       <FormControl sx={{ float: "left", width: 140 }}>
         <TextField
           size="small"

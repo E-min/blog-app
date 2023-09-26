@@ -18,7 +18,7 @@ const Card = ({ data, children }) => {
   };
 
   const handleCardClick = () => {
-    navigate(`/blogs/${data.id}`);
+    navigate(`/blog-app/${data.id}`);
   };
 
   const isUserLiked = data?.likes_n?.some(

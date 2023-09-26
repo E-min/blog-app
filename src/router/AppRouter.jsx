@@ -9,6 +9,7 @@ import EffectField from "../components/animation/EffectField";
 import Blogs from "../components/pages/Blogs/Blogs";
 import Blog from "../components/pages/Blog/Blog";
 import MyBlogs from "../components/pages/MyBlogs/MyBlogs";
+import Profile from "../components/pages/Profile";
 
 const AppRouter = () => {
   const { isLoggedIn } = useSelector(({ auth }) => auth);
@@ -18,16 +19,17 @@ const AppRouter = () => {
       <Route
         path="/*"
         element={
-          isLoggedIn ? <Navigate to="/blogs" /> : <Navigate to="/login" />
+          isLoggedIn ? <Navigate to="/blog-app" /> : <Navigate to="/login" />
         }
       />
-      <Route element={isLoggedIn ? <Navigate to="/blogs" /> : <EffectField />}>
+      <Route element={isLoggedIn ? <Navigate to="/blog-app" /> : <EffectField />}>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
       </Route>
-      <Route path="/blogs" element={<PrivateRouter />}>
+      <Route path="/blog-app" element={<PrivateRouter />}>
         <Route index element={<Blogs />} />
         <Route path="myblogs" element={<MyBlogs />} />
+        <Route path="profile" element={<Profile />} />
         <Route path=":id" element={<Blog />} />
         <Route path="about" element={<About />} />
       </Route>

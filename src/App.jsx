@@ -6,6 +6,7 @@ import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import { darkTheme, lightTheme } from "./themes";
 import { useState } from "react";
+import "./components/custom-scrollbar.css"
 
 const App = () => {
   const [isDarkTheme, setIsDarkTheme] = useState(
