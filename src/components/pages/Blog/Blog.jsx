@@ -11,6 +11,25 @@ import { useSelector } from "react-redux";
 import CommentSection from "./CommentSection";
 import BlogSkeleton from "../../Skeletons/BlogSkeleton";
 
+const convertToLocalDate = (rawDate) => {
+  const dateObject = new Date(rawDate);
+
+  // Set the hours to the user's local time
+  // dateObject.setHours(dateObject.getHours());
+
+  const options = {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    // hour: "numeric",
+    // minute: "numeric",
+    // second: "numeric",
+    // hour12: false
+  };
+
+  return dateObject.toLocaleDateString("en-US", options);
+};
+
 const Blog = () => {
   const { id } = useParams();
   const { blog, loading, getDetailsById } = useGetBlogDetailsById();
@@ -21,17 +40,6 @@ const Blog = () => {
   useEffect(() => {
     getDetailsById(id);
   }, []);
-
-  const convertToLocalDate = (rawDate) => {
-    const dateObject = new Date(rawDate);
-    const options = {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    };
-
-    return dateObject.toLocaleDateString("en-US", options);
-  };
 
   return (
     <Box maxWidth="sm" mx="auto" px={1}>
@@ -53,31 +61,35 @@ const Blog = () => {
           </Button>
         </>
       )}
-      {loading ? (<BlogSkeleton />) : (<Paper sx={{ p: 2, pb: 4 }}>
-        <Box sx={{ borderBottom: 1, pb: 1 }}>
-          <Typography>Author: {blog.author}</Typography>
-          <Typography>Category: {blog.category_name}</Typography>
-          <Typography>
-            Publish Date: {convertToLocalDate(blog.publish_date)}
+      {loading ? (
+        <BlogSkeleton />
+      ) : (
+        <Paper sx={{ p: 2, pb: 4 }}>
+          <Box sx={{ borderBottom: 1, pb: 1 }}>
+            <Typography>Author: {blog.author}</Typography>
+            <Typography>Category: {blog.category_name}</Typography>
+            <Typography>
+              Publish Date: {convertToLocalDate(blog.publish_date)}
+            </Typography>
+          </Box>
+          <Typography component="h2" variant="h4" sx={{ my: 2 }}>
+            {blog.title}
           </Typography>
-        </Box>
-        <Typography component="h2" variant="h4" sx={{ my: 2 }}>
-          {blog.title}
-        </Typography>
-        <Typography sx={{ letterSpacing: 0.5 }}>
-          {blog.content
-            ?.slice(1, -1)
-            .split("\\n")
-            .map((line, i) => (
-              <Fragment key={i}>
-                {line}
-                <br />
-              </Fragment>
-            ))}
-        </Typography>
-      </Paper>)}
+          <Typography sx={{ letterSpacing: 0.5 }}>
+            {blog.content
+              ?.slice(1, -1)
+              .split("\\n")
+              .map((line, i) => (
+                <Fragment key={i}>
+                  {line}
+                  <br />
+                </Fragment>
+              ))}
+          </Typography>
+        </Paper>
+      )}
       <Paper sx={{ mt: 4, p: 2 }}>
-        <CommentSection blog={blog} convertDate={convertToLocalDate} refreshPage={getDetailsById} />
+        <CommentSection blogId={id} convertDate={convertToLocalDate} />
       </Paper>
     </Box>
   );

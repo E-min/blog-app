@@ -5,41 +5,38 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Comment from "./Comment";
 import SendIcon from "@mui/icons-material/Send";
+import { useState, useEffect } from "react";
 import useSendComment from "../../../hooks/useSendComment";
-import { useState } from "react";
-import { useEffect } from "react";
+import useGetCommentsById from "../../../hooks/useGetCommentsById";
 
-export default function CommentSection({ blog, convertDate, refreshPage }) {
-  const [inputComment, setInputComment] = useState({
-    post: "",
-    content: "",
-  });
+export default function CommentSection({ blogId, convertDate }) {
+  const [inputComment, setInputComment] = useState("");
+  const { comments, getCommentsById } = useGetCommentsById();
+  const { postComment, sendComment } = useSendComment();
+  const maxCommentLength = 200;
 
   useEffect(() => {
-    setInputComment((prev) => ({ ...prev, post: blog.id }));
-  }, [blog]);
-
-  const { error, commentLoading, sendComment } = useSendComment();
-  const maxCommentLength = 200;
+    getCommentsById(blogId);
+  }, []);
 
   const handleInputChange = (e) => {
     const inputValue = e.target.value;
     if (inputValue.length <= maxCommentLength) {
-      setInputComment((prev) => ({ ...prev, content: inputValue }));
+      setInputComment(inputValue);
     } else {
-      setInputComment((prev) => ({
-        ...prev,
-        content: inputValue.slice(0, maxCommentLength),
-      }));
+      setInputComment(inputValue.slice(0, maxCommentLength));
     }
   };
 
   const handleSendComment = (e) => {
     e.preventDefault();
-    e.target.reset();
-    setInputComment((prev) => ({ ...prev, content: "" }));
-    sendComment(inputComment, refreshPage);
+    const onSuccess = () => {
+      setInputComment("");
+      getCommentsById(blogId);
+    };
+    sendComment({ content: inputComment, post: blogId }, onSuccess);
   };
+
   return (
     <>
       <FormControl component="form" onSubmit={handleSendComment} fullWidth>
@@ -48,11 +45,11 @@ export default function CommentSection({ blog, convertDate, refreshPage }) {
           placeholder="Write your comment"
           multiline
           rows={4}
-          sx={{ my: 2 }}
-          value={inputComment.content}
+          margin="normal"
+          value={inputComment}
           onChange={handleInputChange}
-          error={error}
-          helperText={error && "Comment couldn't sent"}
+          error={postComment.error}
+          helperText={postComment.error && postComment.errorMsg}
           InputProps={{
             endAdornment: (
               <Typography
@@ -64,15 +61,14 @@ export default function CommentSection({ blog, convertDate, refreshPage }) {
                   fontSize: 14,
                 }}
               >
-                {inputComment.content.length}/{maxCommentLength}
+                {inputComment.length}/{maxCommentLength}
               </Typography>
             ),
           }}
-          required
         />
         <Button
           type="submit"
-          disabled={commentLoading}
+          disabled={postComment.loading}
           variant="contained"
           endIcon={<SendIcon />}
         >
@@ -80,20 +76,14 @@ export default function CommentSection({ blog, convertDate, refreshPage }) {
         </Button>
       </FormControl>
       <Box sx={{ mt: 3, pb: 2, borderTop: 2 }}>
-        {blog.comments ? (
-          blog.comments.length ? (
-            blog.comments.map((comment) => (
-              <Comment
-                key={comment.id}
-                comment={comment}
-                convertDate={convertDate}
-              />
-            ))
-          ) : (
-            <Typography sx={{ textAlign: "center", color: "grey", mt: 2 }}>
-              No Comments
-            </Typography>
-          )
+        {[comments.data].length ? (
+          comments.data.map((comment) => (
+            <Comment
+              key={comment.id}
+              comment={comment}
+              convertDate={convertDate}
+            />
+          ))
         ) : (
           <Typography sx={{ textAlign: "center", color: "grey", mt: 2 }}>
             No Comments

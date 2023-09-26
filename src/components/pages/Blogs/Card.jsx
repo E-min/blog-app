@@ -6,6 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import { useSelector } from "react-redux";
 import useLikeUnlike from "../../../hooks/useLikeUnlike";
 import { useNavigate } from "react-router";
+import LoadingImage from "../LoadingImage";
 
 const Card = ({ data, children }) => {
   const { currentUser } = useSelector(({ auth }) => auth);
@@ -57,11 +58,7 @@ const Card = ({ data, children }) => {
               px: 2,
             }}
           >
-            <img
-              src={data.image}
-              alt=""
-              style={{ maxWidth: "100%", maxHeight: "100%" }}
-            />
+            <LoadingImage url={data.image} />
           </Box>
         </Box>
         <Box

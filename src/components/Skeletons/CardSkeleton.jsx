@@ -18,10 +18,18 @@ export default function CardSkeleton() {
           pt: 1,
         }}
       >
-        <Typography variant="h4" m={1}>
+        <Typography variant="h4" my={1} mx={2}>
           <Skeleton />
         </Typography>
-        <Skeleton variant="rectangular" height={150} />
+        <Box
+          sx={{
+            width: "100%",
+            height: 150,
+            px: 2,
+          }}
+        >
+          <Skeleton variant="rectangular" height={150} />
+        </Box>
         <Box sx={{ display: "flex", justifyContent: "space-around", mt: 3 }}>
           <Skeleton variant="rounded" height={40} width={57} />
           <Skeleton variant="rounded" height={40} width={57} />
