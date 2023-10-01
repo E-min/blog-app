@@ -27,9 +27,19 @@ export default function Profile() {
   return (
     <Box maxWidth="sm" mx="auto">
       <Toolbar />
-      <Paper elevation={3} sx={{ p: 2, mx: 1 }}>
+      <Paper elevation={3} sx={{ mx: 1, p: 2, pt: 4 }}>
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={4} sx={{display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
+          <Grid
+            item
+            xs={12}
+            sm={4}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             <Box>
               <Avatar
                 alt={currentUser.username}
@@ -37,12 +47,25 @@ export default function Profile() {
                 sx={{ width: 100, height: 100, mx: "auto" }}
               />
             </Box>
-            <Box sx={{pb: 2}}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                width: "100%",
+                height: "100%",
+                mb: 2,
+              }}
+            >
               <Typography>Bio</Typography>
               <Typography
-                sx={{ bgcolor: "action.hover", p: 1, borderRadius: 1,width: "100%", height: "100%" }}
+                sx={{
+                  p: 1,
+                  borderRadius: 1,
+                  bgcolor: "action.hover",
+                  flex: 1
+                }}
               >
-                {currentUser.bio}
+                {currentUser.bio.length ? currentUser.bio : "..."}
               </Typography>
             </Box>
           </Grid>
@@ -56,7 +79,7 @@ export default function Profile() {
                     bgcolor: "action.hover",
                     borderRadius: 1,
                     p: 1,
-                    mb: 1,
+                    mb: 2,
                   }}
                 >
                   {info.content}
