@@ -52,7 +52,7 @@ const AppRouter = ({ isDarkTheme }) => {
         }}
       >
         <img
-          src={Loading}
+          src={"./bars-scale-fade.svg"}
           alt=""
           width={"10%"}
           style={isDarkTheme ? { filter: "invert(100%)" } : {}}
