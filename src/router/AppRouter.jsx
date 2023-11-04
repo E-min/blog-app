@@ -62,7 +62,7 @@ const AppRouter = ({ isDarkTheme }) => {
   } else {
     return (
       <Routes>
-        {/* <Route path="/*" element={<AuthChecker />} /> */}
+        {/* <Route path="/*" element={<Error />} /> */}
         <Route
           element={isLoggedIn ? <Navigate to="/blog-app" /> : <EffectField />}
         >
