@@ -1,0 +1,24 @@
+.spinner_hzlK {
+  animation: spinner_vc4H 0.8s linear infinite;
+  animation-delay: -0.8s;
+}
+
+.spinner_koGT {
+  animation-delay: -0.65s;
+}
+
+.spinner_YF1u {
+  animation-delay: -0.5s;
+}
+
+@keyframes spinner_vc4H {
+  0% {
+    transform: translateY(1px);
+    height: 22px;
+  }
+  93.75% {
+    transform: translateY(5px);
+    height: 14px;
+    opacity: 0.2;
+  }
+}
