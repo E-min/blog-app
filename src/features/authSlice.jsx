@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
 
-const auth = Cookies.get("auth") ?? sessionStorage.getItem("auth");
-const initialState = auth
+// const auth = Cookies.get("auth") ?? sessionStorage.getItem("auth");
+const initialState =/* auth
   ? JSON.parse(auth)
-  : {
+  : */{
       currentUser: null,
       isLoggedIn: false,
       loading: false,
@@ -17,6 +17,11 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
+    authChecker: (state, {payload}) => {
+      state.currentUser = payload.currentUser;
+      state.isLoggedIn = true;
+      state.token = payload.token;
+    },
     loginSuccess: (state, { payload }) => {
       state.currentUser = payload.data.user;
       state.token = payload.data.key;
@@ -55,6 +60,7 @@ const authSlice = createSlice({
 });
 
 export const {
+  authChecker,
   loginSuccess,
   registerSuccess,
   logoutSuccess,

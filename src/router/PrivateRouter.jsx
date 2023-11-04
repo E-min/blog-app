@@ -5,8 +5,9 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 
 const PrivateRouter = () => {
-  const { currentUser } = useSelector(({ auth }) => auth);
-  return currentUser ? (
+  const { isLoggedIn } = useSelector(({ auth }) => auth);
+
+  return isLoggedIn ? (
     <>
       <Navbar />
       <Box

@@ -23,7 +23,7 @@ const App = () => {
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <BrowserRouter>
-          <AppRouter />
+          <AppRouter isDarkTheme={isDarkTheme}/>
         </BrowserRouter>
       </ThemeProvider>
       <CssBaseline />

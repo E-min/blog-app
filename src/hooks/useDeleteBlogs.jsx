@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axiosWithToken from "../services/axiosWithToken";
 
-const useDeleteBlogs = () => {
+export default function useDeleteBlogs() {
   const blogAppWithToken = axiosWithToken();
   const [delBlogs, setDelBlogs] = useState(false);
 
@@ -19,4 +19,3 @@ const useDeleteBlogs = () => {
   return { delBlogs, deleteBlogs };
 };
 
-export default useDeleteBlogs;
