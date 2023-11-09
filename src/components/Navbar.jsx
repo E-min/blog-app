@@ -17,7 +17,7 @@ import { NavLink } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 
 const pages = [
-  { title: "Dashboard", to: "/blog-app" },
+  { title: "Blogs", to: "/blog-app" },
   { title: "About", to: "/blog-app/about" },
 ];
 const settings = [

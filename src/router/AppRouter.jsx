@@ -1,9 +1,6 @@
 import { Routes, Route } from "react-router";
 import { Navigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import { authChecker } from "../features/authSlice";
-import { useNavigate } from "react-router";
+import { useSelector } from "react-redux";
 import Login from "../components/auth/Login";
 import Register from "../components/auth/Register";
 import PrivateRouter from "./PrivateRouter";
@@ -15,28 +12,10 @@ import Box from "@mui/material/Box";
 import MyBlogs from "../components/pages/MyBlogs/MyBlogs";
 import Profile from "../components/pages/Profile";
 import useTokenValidate from "../hooks/useTokenValidate";
-import Cookies from "js-cookie";
 
 const AppRouter = ({ isDarkTheme }) => {
   const { isLoggedIn } = useSelector(({ auth }) => auth);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { tokenValidate, validateToken } = useTokenValidate();
-
-  useEffect(() => {
-    const cookie = Cookies.get("auth") ?? sessionStorage.getItem("auth");
-    if (cookie) {
-      const auth = JSON.parse(cookie);
-      const onSuccess = () => {
-        dispatch(authChecker(auth));
-        navigate("/blog-app");
-      };
-      const onFail = () => {
-        navigate("/login");
-      };
-      validateToken(auth.token, onSuccess, onFail);
-    }
-  }, []);
+  const tokenValidate = useTokenValidate();
 
   if (tokenValidate.loading) {
     return (
@@ -78,7 +57,7 @@ const AppRouter = ({ isDarkTheme }) => {
   } else {
     return (
       <Routes>
-        {/* <Route path="/*" element={<Error />} /> */}
+        <Route path="/*" element={<Navigate to="/login" />} />
         <Route
           element={isLoggedIn ? <Navigate to="/blog-app" /> : <EffectField />}
         >

@@ -5,11 +5,31 @@ const Cube = ({ specs, removeCube }) => {
   const [cube, setCube] = useState({ x, y, display: "none" });
 
   useEffect(() => {
-    const timeId = setTimeout(() => {
-      setCube((prev) => ({ ...prev, y: -50, display: "block" }));
-    }, 100);
-    return () => clearTimeout(timeId);
+    let isMounted = true;
+    let start;
+  
+    const animate = (timestamp) => {
+      if (!start) start = timestamp;
+      const elapsed = timestamp - start;
+  
+      if (elapsed < 100) {
+        if (isMounted) {
+          requestAnimationFrame(animate);
+        }
+      } else {
+        if (isMounted) {
+          setCube((prev) => ({ ...prev, y: -50, display: "block" }));
+        }
+      }
+    };
+  
+    requestAnimationFrame(animate);
+  
+    return () => {
+      isMounted = false;
+    };
   }, []);
+  
 
   const cubeStyles = {
     display: cube.display,
@@ -18,6 +38,7 @@ const Cube = ({ specs, removeCube }) => {
     backgroundColor: color,
     boxShadow: `0 0 ${width}px 0 ${color}`,
     opacity,
+    filter: 'blur(2px)'
   };
   const laserStyle = {
     position: "absolute",
