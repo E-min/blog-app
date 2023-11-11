@@ -13,6 +13,9 @@ export default function useDeleteBlogs() {
       setDelBlogs({ loading: false, error: false });
     } catch (error) {
       setDelBlogs({ loading: false, error: true });
+      if(error.response?.statusText === "Unauthorized") {
+        location.reload()
+      }
     }
   };
 

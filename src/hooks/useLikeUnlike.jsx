@@ -17,8 +17,11 @@ const useLikeUnlike = () => {
         .map((like) => ({ id: like.id, user_id: like.user, post: like.post }));
         
       dispatch(updateBlogs({ id, totalLikes }));
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.log(error);
+      if(error.response?.statusText === "Unauthorized") {
+        location.reload()
+      }
     } finally {
       setLoading(false);
     }

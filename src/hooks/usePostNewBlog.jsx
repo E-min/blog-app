@@ -21,6 +21,9 @@ const usePostNewBlog = () => {
       setNewBlog({ loading: false, error: false });
     } catch (error) {
       setNewBlog({ loading: false, error: true });
+      if(error.response?.statusText === "Unauthorized") {
+        location.reload()
+      }
     }
   };
 

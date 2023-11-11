@@ -34,6 +34,9 @@ const useSendComment = () => {
         error: true,
         errorMsg: error.message,
       });
+      if(error.response?.statusText === "Unauthorized") {
+        location.reload()
+      }
     }
   };
 

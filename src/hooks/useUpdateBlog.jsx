@@ -21,6 +21,9 @@ const useUpdateBlog = () => {
     } catch (error) {
       console.log(error);
       setUpdateBlog({ loading: false, error: true });
+      if(error.response?.statusText === "Unauthorized") {
+        location.reload()
+      }
     }
   };
 

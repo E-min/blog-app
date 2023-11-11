@@ -12,7 +12,9 @@ const useGetBlogDetailsById = () => {
       const { data } = await blogAppWithToken.get(`/api/blogs/${id}/`);
       setBlog(data);
     } catch (error) {
-      console.log(error);
+      if(error.response?.statusText === "Unauthorized") {
+        location.reload()
+      }
     } finally {
       setLoading(false);
     }
