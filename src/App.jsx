@@ -5,26 +5,18 @@ import { Provider } from "react-redux";
 import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import { darkTheme, lightTheme } from "./themes";
-import { useState } from "react";
-import "./components/custom-scrollbar.css"
-import "./components/loading-bars.css"
+import "./components/custom-scrollbar.css";
+import "./components/loading-bars.css";
 
 const App = () => {
-  const [isDarkTheme, setIsDarkTheme] = useState(
-    window.matchMedia("(prefers-color-scheme: dark)").matches
-  );
-
-  const toggleTheme = () => {
-    setIsDarkTheme((prev) => !prev);
-  };
-
+  const isDarkTheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
   const theme = isDarkTheme ? darkTheme : lightTheme;
 
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <BrowserRouter>
-          <AppRouter isDarkTheme={isDarkTheme}/>
+          <AppRouter />
         </BrowserRouter>
       </ThemeProvider>
       <CssBaseline />
