@@ -66,8 +66,8 @@ export default function PostAndUpdateBlogsModal({
     <Modal
       open={openModal}
       onClose={handleClose}
-      aria-labelledby="modal-delete-confirm"
-      aria-describedby="modal-delete-confirmation"
+      aria-labelledby="modal-edit-content"
+      aria-describedby="modal-edit-content"
       className="scrollable-content"
       sx={{
         display: "flex",

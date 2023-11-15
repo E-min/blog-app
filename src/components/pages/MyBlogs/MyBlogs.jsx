@@ -37,7 +37,7 @@ const MyBlogs = () => {
   };
 
   const handleOpenDeleteConfirm = (title, id) => {
-    confirmDelBlog.current = { id, title };
+    confirmDelBlog.current = { id, title: ` ${title} ` };
     setOpenConfirm(true);
   };
 
@@ -59,7 +59,7 @@ const MyBlogs = () => {
         open={openConfirm}
         onClose={() => setOpenConfirm(false)}
         aria-labelledby="modal-delete-confirm"
-        aria-describedby="modal-delete-confirmation"
+        aria-describedby="modal-delete-confirm"
         sx={{
           display: "flex",
           justifyContent: "center",
@@ -78,8 +78,8 @@ const MyBlogs = () => {
             }}
           >
             <Typography sx={{ color: "text.primary", mb: 4 }}>
-              Are you sure?{" "}
-              <strong>{openConfirm && confirmDelBlog.current.title}</strong>{" "}
+              Are you sure?
+              <strong>{openConfirm && confirmDelBlog.current.title}</strong>
               will be deleted.
             </Typography>
             <Button
