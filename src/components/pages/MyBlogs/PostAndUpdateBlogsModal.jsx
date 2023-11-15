@@ -6,6 +6,8 @@ import TextField from "@mui/material/TextField";
 import CategoriesSelect from "../CategoriesSelect";
 import usePostNewBlog from "../../../hooks/usePostNewBlog";
 import useUpdateBlog from "../../../hooks/useUpdateBlog";
+import {motion} from "framer-motion"
+import { Scale } from "@mui/icons-material";
 
 const initialState = {
   category: "",
@@ -66,6 +68,7 @@ export default function PostAndUpdateBlogsModal({
       aria-labelledby="modal-delete-confirm"
       aria-describedby="modal-delete-confirmation"
     >
+      
       <Box
         className="scrollable-content"
         sx={{
@@ -85,6 +88,11 @@ export default function PostAndUpdateBlogsModal({
         }}
         maxWidth="sm"
       >
+        <motion.div
+          initial={{ transform: "translate(0, 300px)" }}
+          animate={{ transform: "translate(0,0)" }}
+          transition={{ duration: 0.2 }}
+        >
         <CategoriesSelect
           value={formInput.category}
           error={false}
@@ -131,6 +139,7 @@ export default function PostAndUpdateBlogsModal({
             {blog ? "Save" : "Send"}
           </Button>
         </Box>
+      </motion.div>
       </Box>
     </Modal>
   );

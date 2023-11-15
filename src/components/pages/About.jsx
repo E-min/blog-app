@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
@@ -8,24 +8,18 @@ import EmailIcon from "@mui/icons-material/Email";
 import React, { useRef } from "react";
 import copy from "clipboard-copy";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 const CopyToClipboardList = ({ text, icon }) => {
-  const [notifyBubble, setNotifyBubble] = useState();
+  const [notifyBubble, setNotifyBubble] = useState(false);
   const textRef = useRef(null);
 
   const handleCopyClick = async () => {
     try {
       await copy(textRef.current.innerText);
-      setNotifyBubble(
-        <Paper
-          elevation={4}
-          sx={{ position: "absolute", left: "50%", bottom: -10, padding: 0.5 }}
-        >
-          <Typography fontSize={13}>Copied!</Typography>
-        </Paper>
-      );
+      setNotifyBubble(true);
       setTimeout(() => {
-        setNotifyBubble();
+        setNotifyBubble(false);
       }, 2000);
     } catch (err) {
       console.error("Unable to copy text to clipboard:", err);
@@ -33,7 +27,7 @@ const CopyToClipboardList = ({ text, icon }) => {
   };
 
   return (
-    <li onClick={handleCopyClick}>
+    <Grid item sm={4} xs={12} onClick={handleCopyClick}>
       <Box
         sx={{
           position: "relative",
@@ -50,29 +44,50 @@ const CopyToClipboardList = ({ text, icon }) => {
           sx={{
             fontSize: 14,
             whiteSpace: "nowrap",
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
+            overflow: "hidden",
+            textOverflow: "ellipsis",
           }}
           ref={textRef}
         >
           {text}
         </Typography>
-        {notifyBubble}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: notifyBubble ? 1 : 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Paper
+            elevation={4}
+            sx={{
+              position: "absolute",
+              left: "50%",
+              bottom: -10,
+              padding: 0.5,
+            }}
+          >
+            <Typography fontSize={13}>Copied!</Typography>
+          </Paper>
+        </motion.div>
       </Box>
-    </li>
+    </Grid>
   );
 };
 
 const About = () => {
   return (
     <Box
-      sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 2,
+      }}
     >
       <Paper
         sx={{
           padding: 3,
           borderRadius: 5,
-          maxWidth: 300,
+          maxWidth: 600,
           textAlign: "center",
           marginTop: 10,
         }}
@@ -90,7 +105,11 @@ const About = () => {
           If you want to check out my other projects or contact me.
         </Typography>
         <br />
-        <ul style={{ listStyleType: "none", padding: 0, textAlign: "left" }}>
+        <Grid
+          container
+          spacing={2}
+          style={{ listStyleType: "none", padding: 0, textAlign: "left" }}
+        >
           <CopyToClipboardList
             text={"github.com/E-min"}
             icon={<GitHubIcon sx={{ fontSize: 40, mr: 1 }} />}
@@ -103,7 +122,7 @@ const About = () => {
             text={"eminkocabuga@gmail.com"}
             icon={<EmailIcon sx={{ fontSize: 40, mr: 1 }} />}
           />
-        </ul>
+        </Grid>
       </Paper>
     </Box>
   );
