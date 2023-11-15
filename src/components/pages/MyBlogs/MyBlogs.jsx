@@ -60,49 +60,44 @@ const MyBlogs = () => {
         onClose={() => setOpenConfirm(false)}
         aria-labelledby="modal-delete-confirm"
         aria-describedby="modal-delete-confirmation"
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            width: "100%",
-            height: "100%",
-          }}
+        <motion.div
+          initial={{ transform: "scale(0.5)" }}
+          animate={{ transform: "scale(1)" }}
+          transition={{ duration: 0.1 }}
         >
-          <motion.div
-            initial={{ transform: "scale(0.5)" }}
-            animate={{ transform: "scale(1)" }}
-            transition={{ duration: 0.1 }}
+          <Paper
+            sx={{
+              boxShadow: 24,
+              p: 4,
+            }}
           >
-            <Paper
-              sx={{
-                boxShadow: 24,
-                p: 4,
-              }}
+            <Typography sx={{ color: "text.primary", mb: 4 }}>
+              Are you sure?{" "}
+              <strong>{openConfirm && confirmDelBlog.current.title}</strong>{" "}
+              will be deleted.
+            </Typography>
+            <Button
+              sx={{ mr: 2 }}
+              disabled={delBlogs.loading}
+              onClick={handleDelete}
+              variant="contained"
             >
-              <Typography sx={{ color: "text.primary", mb: 4 }}>
-                Are you sure?{" "}
-                <strong>{openConfirm && confirmDelBlog.current.title}</strong>{" "}
-                will be deleted.
+              Yes
+            </Button>
+            <Button onClick={() => setOpenConfirm(false)}>No</Button>
+            {delBlogs.error && (
+              <Typography sx={{ color: "error.main", mt: 1 }}>
+                Couldn't deleted
               </Typography>
-              <Button
-                sx={{ mr: 2 }}
-                disabled={delBlogs.loading}
-                onClick={handleDelete}
-                variant="contained"
-              >
-                Yes
-              </Button>
-              <Button onClick={() => setOpenConfirm(false)}>No</Button>
-              {delBlogs.error && (
-                <Typography sx={{ color: "error.main", mt: 1 }}>
-                  Couldn't deleted
-                </Typography>
-              )}
-            </Paper>
-          </motion.div>
-        </Box>
+            )}
+          </Paper>
+        </motion.div>
       </Modal>
       <Box my={4}>
         <Button

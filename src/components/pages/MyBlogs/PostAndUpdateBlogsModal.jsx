@@ -68,82 +68,81 @@ export default function PostAndUpdateBlogsModal({
       onClose={handleClose}
       aria-labelledby="modal-delete-confirm"
       aria-describedby="modal-delete-confirmation"
+      className="scrollable-content"
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        overflowY: "auto",
+        overflowX: "hidden",
+      }}
     >
-      <Box
-        className="scrollable-content"
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          width: "100%",
-          height: "100%",
-          border: "2px solid #000",
-          maxHeight: "100vh",
-          overflowY: "auto",
-          overflowX: "hidden",
-        }}
-      >
-        <motion.div
-          initial={{ transform: "scale(0.5)" }}
-          animate={{ transform: "scale(1)" }}
-          transition={{ duration: 0.1 }}
+        <Box
+          sx={{
+            maxHeight: "100vh",
+          }}
         >
-          <Paper
-            sx={{
-              boxShadow: 24,
-              py: 4,
-              px: 2,
-            }}
+          <motion.div
+            initial={{ transform: "scale(0.5)" }}
+            animate={{ transform: "scale(1)" }}
+            transition={{ duration: 0.1 }}
           >
-            <CategoriesSelect
-              value={formInput.category}
-              error={false}
-              handleChange={handleChange}
-            />
-            <TextField
-              margin="normal"
-              label="Cover Image Url"
-              name="image"
-              id="image"
-              fullWidth
-              value={formInput.image}
-              onChange={handleChange}
-            />
-            <TextField
-              margin="dense"
-              label="Title"
-              name="title"
-              id="title"
-              fullWidth
-              value={formInput.title}
-              onChange={handleChange}
-            />
-            <TextField
-              margin="dense"
-              label="Contnet"
-              name="content"
-              id="content"
-              fullWidth
-              multiline
-              minRows={5}
-              value={formInput.content}
-              onChange={handleChange}
-            />
-            <Box sx={{ textAlign: "right", mt: 2 }}>
-              <Button sx={{ mr: 1 }} onClick={handleClose}>
-                Cancel
-              </Button>
-              <Button
-                onClick={blog ? handleSubmitUpdateBlog : handleSumbitNewBlog}
-                variant="contained"
-                disabled={blog ? updateBlog.loading : newBlog.loading}
-              >
-                {blog ? "Save" : "Send"}
-              </Button>
-            </Box>
-          </Paper>
-        </motion.div>
-      </Box>
+            <Paper
+              sx={{
+                boxShadow: 24,
+                py: 4,
+                px: 2,
+              }}
+            >
+              <CategoriesSelect
+                value={formInput.category}
+                error={false}
+                handleChange={handleChange}
+              />
+              <TextField
+                margin="normal"
+                label="Cover Image Url"
+                name="image"
+                id="image"
+                fullWidth
+                value={formInput.image}
+                onChange={handleChange}
+              />
+              <TextField
+                margin="dense"
+                label="Title"
+                name="title"
+                id="title"
+                fullWidth
+                value={formInput.title}
+                onChange={handleChange}
+              />
+              <TextField
+                margin="dense"
+                label="Contnet"
+                name="content"
+                id="content"
+                fullWidth
+                multiline
+                minRows={5}
+                value={formInput.content}
+                onChange={handleChange}
+              />
+              <Box sx={{ textAlign: "right", mt: 2 }}>
+                <Button sx={{ mr: 1 }} onClick={handleClose}>
+                  Cancel
+                </Button>
+                <Button
+                  onClick={blog ? handleSubmitUpdateBlog : handleSumbitNewBlog}
+                  variant="contained"
+                  disabled={blog ? updateBlog.loading : newBlog.loading}
+                >
+                  {blog ? "Save" : "Send"}
+                </Button>
+              </Box>
+            </Paper>
+          </motion.div>
+        </Box>
     </Modal>
   );
 }
