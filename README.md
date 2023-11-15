@@ -1,2 +1,2 @@
-# Live project
-- blog-app-git-main-mehmet-emins-projects.vercel.app
+# Blog App
+- [Live project](blog-app-git-main-mehmet-emins-projects.vercel.app)
