@@ -107,7 +107,6 @@ const About = () => {
         <br />
         <Grid
           container
-          spacing={2}
           style={{ listStyleType: "none", padding: 0, textAlign: "left" }}
         >
           <CopyToClipboardList

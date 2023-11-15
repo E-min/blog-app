@@ -8,6 +8,7 @@ import usePostNewBlog from "../../../hooks/usePostNewBlog";
 import useUpdateBlog from "../../../hooks/useUpdateBlog";
 import {motion} from "framer-motion"
 import { Scale } from "@mui/icons-material";
+import { Paper } from "@mui/material";
 
 const initialState = {
   category: "",
@@ -72,27 +73,36 @@ export default function PostAndUpdateBlogsModal({
       <Box
         className="scrollable-content"
         sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          // position: "absolute",
+          // top: "50%",
+          // left: "50%",
+          // transform: "translate(-50%, -50%)",
           width: "100%",
-          bgcolor: "background.paper",
+          height: "100%",
+          // bgcolor: "background.paper",
           border: "2px solid #000",
-          boxShadow: 24,
-          py: 4,
-          px: 2,
           maxHeight: "100vh",
           overflowY: "auto",
           overflowX: "hidden",
         }}
-        maxWidth="sm"
+        // maxWidth="md"
       >
         <motion.div
           initial={{ transform: "translate(0, 300px)" }}
-          animate={{ transform: "translate(0,0)" }}
-          transition={{ duration: 0.2 }}
+          animate={{ transform: "translate(0)" }}
+          transition={{ duration: 0.1 }}
         >
+        <Paper
+        sx={{
+          boxShadow: 24,
+          py: 4,
+          px: 2,
+        }}>
+
+        
         <CategoriesSelect
           value={formInput.category}
           error={false}
@@ -139,6 +149,7 @@ export default function PostAndUpdateBlogsModal({
             {blog ? "Save" : "Send"}
           </Button>
         </Box>
+        </Paper>
       </motion.div>
       </Box>
     </Modal>
